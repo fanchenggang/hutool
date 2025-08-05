@@ -74,8 +74,8 @@ Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu
 ## 🛠️包含组件
 一个Java基础工具类，对文件、流、加密解密、转码、正则、线程、XML等JDK方法进行封装，组成各种Util工具类，同时提供以下组件：
 
-| 模块                |     介绍                                                                          |
-| -------------------|---------------------------------------------------------------------------------- |
+| 模块                 |     介绍                                                                          |
+|--------------------|---------------------------------------------------------------------------------- |
 | hutool-aop         |     JDK动态代理封装，提供非IOC下的切面支持                                              |
 | hutool-bloomFilter |     布隆过滤，提供一些Hash算法的布隆过滤                                                |
 | hutool-cache       |     简单缓存实现                                                                     |
@@ -95,6 +95,7 @@ Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu
 | hutool-poi         |     针对POI中Excel和Word的封装                                                       |
 | hutool-socket      |     基于Java的NIO和AIO的Socket封装                                                   |
 | hutool-jwt         |     JSON Web Token (JWT)封装实现                                                    |
+| hutool-ai          |     AI大模型封装实现                                                    |
 
 可以根据需求对每个模块单独引入，也可以通过引入`hutool-all`方式引入所有模块。
 
@@ -123,20 +124,20 @@ Hutool = Hu + tool，是原公司项目底层代码剥离后的开源库，“Hu
 <dependency>
     <groupId>cn.hutool</groupId>
     <artifactId>hutool-all</artifactId>
-    <version>5.8.37</version>
+    <version>5.8.40</version>
 </dependency>
 ```
 
 ### 🍐Gradle
 ```
-implementation 'cn.hutool:hutool-all:5.8.37'
+implementation 'cn.hutool:hutool-all:5.8.40'
 ```
 
 ### 📥下载jar
 
 点击以下链接，下载`hutool-all-X.X.X.jar`即可：
 
-- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.37/)
+- [Maven中央库](https://repo1.maven.org/maven2/cn/hutool/hutool-all/5.8.40/)
 
 > 🔔️注意
 > Hutool 5.x支持JDK8+，对Android平台没有测试，不能保证所有工具类或工具方法可用。

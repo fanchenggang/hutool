@@ -7,6 +7,8 @@ import cn.hutool.core.util.CharsetUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -58,12 +60,17 @@ public class FileUtilTest {
 	}
 
 	@Test
+	@EnabledOnOs(OS.WINDOWS)
 	public void smbPathTest() {
 		final String smbPath = "\\\\192.168.1.1\\share\\rc-source";
 		final String parseSmbPath = FileUtil.getAbsolutePath(smbPath);
 		assertEquals(smbPath, parseSmbPath);
 		assertTrue(FileUtil.isAbsolutePath(smbPath));
-		assertTrue(Paths.get(smbPath).isAbsolute());
+		if(FileUtil.isWindows()){
+			// 在Windows下`\`路径是绝对路径，也表示SMB路径
+			// 但是在Linux下，`\`表示转义字符，并不被识别为路径
+			assertTrue(Paths.get(smbPath).isAbsolute());
+		}
 	}
 
 	@Test
@@ -477,21 +484,26 @@ public class FileUtilTest {
 		final List<String> list = ListUtil.of("text/javascript", "application/x-javascript");
 		assertTrue(list.contains(mimeType));
 
-		// office03
-		mimeType = FileUtil.getMimeType("test.doc");
-		assertEquals("application/msword", mimeType);
-		mimeType = FileUtil.getMimeType("test.xls");
-		assertEquals("application/vnd.ms-excel", mimeType);
-		mimeType = FileUtil.getMimeType("test.ppt");
-		assertEquals("application/vnd.ms-powerpoint", mimeType);
+		if(FileUtil.isWindows()){
+			// Linux下的OpenJDK无法正确识别
 
-		// office07+
-		mimeType = FileUtil.getMimeType("test.docx");
-		assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", mimeType);
-		mimeType = FileUtil.getMimeType("test.xlsx");
-		assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", mimeType);
-		mimeType = FileUtil.getMimeType("test.pptx");
-		assertEquals("application/vnd.openxmlformats-officedocument.presentationml.presentation", mimeType);
+			// office03
+			mimeType = FileUtil.getMimeType("test.doc");
+			assertEquals("application/msword", mimeType);
+			mimeType = FileUtil.getMimeType("test.xls");
+			assertEquals("application/vnd.ms-excel", mimeType);
+			mimeType = FileUtil.getMimeType("test.ppt");
+			assertEquals("application/vnd.ms-powerpoint", mimeType);
+
+			// office07+
+			mimeType = FileUtil.getMimeType("test.docx");
+			assertEquals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", mimeType);
+			mimeType = FileUtil.getMimeType("test.xlsx");
+			assertEquals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", mimeType);
+			mimeType = FileUtil.getMimeType("test.pptx");
+			assertEquals("application/vnd.openxmlformats-officedocument.presentationml.presentation", mimeType);
+		}
+
 
 		// pr#2617@Github
 		mimeType = FileUtil.getMimeType("test.wgt");

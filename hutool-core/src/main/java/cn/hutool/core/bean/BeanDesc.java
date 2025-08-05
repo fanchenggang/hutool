@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,7 +49,11 @@ public class BeanDesc implements Serializable {
 	public BeanDesc(Class<?> beanClass) {
 		Assert.notNull(beanClass);
 		this.beanClass = beanClass;
-		init();
+		if(RecordUtil.isRecord(beanClass)){
+			initForRecord();
+		}else{
+			init();
+		}
 	}
 
 	/**
@@ -154,6 +159,27 @@ public class BeanDesc implements Serializable {
 	}
 
 	/**
+	 * 针对Record类的反射初始化
+	 */
+	private void initForRecord() {
+		final Class<?> beanClass = this.beanClass;
+		final Map<String, PropDesc> propMap = this.propMap;
+
+		final List<Method> getters = ReflectUtil.getPublicMethods(beanClass, method -> 0 == method.getParameterCount());
+		// 排除静态属性和对象子类
+		final Field[] fields = ReflectUtil.getFields(beanClass, field -> !ModifierUtil.isStatic(field) && !ReflectUtil.isOuterClassField(field));
+		for (final Field field : fields) {
+			for (final Method getter : getters) {
+				if (field.getName().equals(getter.getName())) {
+					//record对象，getter方法与字段同名
+					final PropDesc prop = new PropDesc(field, getter, null);
+					propMap.putIfAbsent(prop.getFieldName(), prop);
+				}
+			}
+		}
+	}
+
+	/**
 	 * 根据字段创建属性描述<br>
 	 * 查找Getter和Setter方法时会：
 	 *
@@ -181,7 +207,8 @@ public class BeanDesc implements Serializable {
 				prop.setter = propIgnoreCase.setter;
 			}
 		}
-
+		// 所有属性完成填充后的初始化逻辑
+		prop.initialize();
 		return prop;
 	}
 

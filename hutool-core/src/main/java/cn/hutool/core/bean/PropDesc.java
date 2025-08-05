@@ -8,7 +8,6 @@ import cn.hutool.core.util.ModifierUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.TypeUtil;
 
-import java.beans.Transient;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -19,6 +18,11 @@ import java.lang.reflect.Type;
  * @author looly
  */
 public class PropDesc {
+
+	/**
+	 * Transient注解的类名
+	 */
+	private static final String TRANSIENT_CLASS_NAME = "java.beans.Transient";
 
 	/**
 	 * 字段
@@ -32,6 +36,22 @@ public class PropDesc {
 	 * Setter方法
 	 */
 	protected Method setter;
+	/**
+	 * get方法或字段上有无transient关键字和@Transient注解
+	 */
+	private boolean transientForGet;
+	/**
+	 * set方法或字段上有无transient关键字和@Transient注解
+	 */
+	private boolean transientForSet;
+	/**
+	 * 检查set方法和字段有无@PropIgnore注解
+	 */
+	private boolean ignoreGet;
+	/**
+	 * 检查set方法和字段有无@PropIgnore注解
+	 */
+	private boolean ignoreSet;
 
 	/**
 	 * 构造<br>
@@ -45,6 +65,21 @@ public class PropDesc {
 		this.field = field;
 		this.getter = ClassUtil.setAccessible(getter);
 		this.setter = ClassUtil.setAccessible(setter);
+	}
+
+	/**
+	 * 在对象的所有属性设置完成后，执行初始化逻辑。
+	 * <p>
+	 * 预先计算transient关键字和@Transient注解、{@link PropIgnore}注解信息<br>
+	 * 见：https://gitee.com/chinabugotech/hutool/pulls/1335
+	 *
+	 * @since 5.8.38
+	 */
+	public void initialize() {
+		transientForGet = isTransientForGet();
+		transientForSet = isTransientForSet();
+		ignoreGet = isIgnoreGet();
+		ignoreSet = isIgnoreSet();
 	}
 
 	/**
@@ -133,12 +168,12 @@ public class PropDesc {
 		}
 
 		// 检查transient关键字和@Transient注解
-		if (checkTransient && isTransientForGet()) {
+		if (checkTransient && transientForGet) {
 			return false;
 		}
 
 		// 检查@PropIgnore注解
-		return false == isIgnoreGet();
+		return false == ignoreGet;
 	}
 
 	/**
@@ -203,12 +238,12 @@ public class PropDesc {
 		}
 
 		// 检查transient关键字和@Transient注解
-		if (checkTransient && isTransientForSet()) {
+		if (checkTransient && transientForSet) {
 			return false;
 		}
 
 		// 检查@PropIgnore注解
-		return false == isIgnoreSet();
+		return false == ignoreSet;
 	}
 
 	/**
@@ -339,7 +374,7 @@ public class PropDesc {
 	 */
 	private boolean isIgnoreSet() {
 		return AnnotationUtil.hasAnnotation(this.field, PropIgnore.class)
-				|| AnnotationUtil.hasAnnotation(this.setter, PropIgnore.class);
+			|| AnnotationUtil.hasAnnotation(this.setter, PropIgnore.class);
 	}
 
 	/**
@@ -354,7 +389,7 @@ public class PropDesc {
 	 */
 	private boolean isIgnoreGet() {
 		return AnnotationUtil.hasAnnotation(this.field, PropIgnore.class)
-				|| AnnotationUtil.hasAnnotation(this.getter, PropIgnore.class);
+			|| AnnotationUtil.hasAnnotation(this.getter, PropIgnore.class);
 	}
 
 	/**
@@ -363,7 +398,6 @@ public class PropDesc {
 	 * @return 是否为Transient关键字修饰的
 	 * @since 5.3.11
 	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
 	private boolean isTransientForGet() {
 		boolean isTransient = ModifierUtil.hasModifier(this.field, ModifierUtil.ModifierType.TRANSIENT);
 
@@ -373,17 +407,7 @@ public class PropDesc {
 
 			// 检查注解
 			if (false == isTransient) {
-				//isTransient = AnnotationUtil.hasAnnotation(this.getter, Transient.class);
-				Class aClass = null;
-				try {
-					// issue#IB0JP5，Android可能无这个类
-					aClass = Class.forName("java.beans.Transient");
-				} catch (final ClassNotFoundException e) {
-					// ignore
-				}
-				if(null != aClass){
-					isTransient = AnnotationUtil.hasAnnotation(this.getter, aClass);
-				}
+				isTransient = AnnotationUtil.hasAnnotation(this.getter, TRANSIENT_CLASS_NAME);
 			}
 		}
 
@@ -405,7 +429,7 @@ public class PropDesc {
 
 			// 检查注解
 			if (false == isTransient) {
-				isTransient = AnnotationUtil.hasAnnotation(this.setter, Transient.class);
+				isTransient = AnnotationUtil.hasAnnotation(this.setter, TRANSIENT_CLASS_NAME);
 			}
 		}
 

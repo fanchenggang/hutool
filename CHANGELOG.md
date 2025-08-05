@@ -2,23 +2,92 @@
 # 🚀Changelog
 
 -------------------------------------------------------------------------------------------------------------
-# 5.8.37(2025-03-11)
+# 5.8.40(2025-07-30)
+
+### 🐣新特性
+* 【captcha】      `MathGenerator`四则运算方式支持不生成负数结果（pr#1363@Gitee）
+* 【core   】      增加`MapValueProvider`和`RecordConverter`并支持Record转换（issue#3985@Github）
+* 【core   】      `CalendarUtil`增加`isSameYear`和`calendar`方法（issue#3995@Github）
+* 【core   】      `DateUtil`增加`yyyy-MM-dd'T'HH:mmXXX`格式支持（pr#1367@Gitee）
+* 【core   】      `MapUtil`增加flatten方法（pr#1368@Gitee）
+
+### 🐞Bug修复
+* 【extra  】      `Sftp``reconnectIfTimeout`方法改为捕获所有异常（issue#3989@Github）
+* 【core   】      修复`ChineseDate `闰年闰月节日获取问题（issue#ICL1BT@Gitee）
+* 【core   】      修复`TreeBuilder`append重复向idTreeMap中put问题（pr#3992@Github）
+* 【extra  】      修复`QLExpressEngine`allowClassSet无效问题（issue#3994@Github）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.8.39(2025-06-20)
+
+### 🐣新特性
+* 【ai     】      增加SSE流式返回函数参数callback，增加超时时间配置，豆包、grok新增文生图接口，豆包生成视频支持使用model,新增HutoolAI平台
+* 【core   】      DesensitizedUtil新增护照号码脱敏功能（pr#1347@Gitee）
+* 【core   】      优化XXXToMapCopier的部分性能（pr#1345@Gitee）
+* 【http   】      `HttpConfig`增加参数`setIgnoreContentLength`可选忽略读取响应contentLength头（issue#ICB1B8@Gitee）
+* 【core   】      `Assert`新增断言给定集合为空的方法以及单元测试用例（pr#3952@Github）
+* 【db     】      Db添加FetchSize的全局设置（pr#3978@Github）
+* 【core   】      增加可召回批处理线程池执行器`RecyclableBatchThreadPoolExecutor`（pr#1343@Gitee）
+* 
+### 🐞Bug修复
+* 【core   】      修复`NumberUtil`isNumber方法以L结尾没有小数点判断问题（issue#3938@Github）
+* 【core   】      修复`CharsequenceUtil`toLowerCase方法拼写错误（issue#3941@Github）
+* 【core   】      修复`UUID`equals的问题，改为final类（issue#3948@Github）
+* 【core   】      修复`Money`中金额分配的问题bug（issue#IC9Y35@Gitee）
+* 【poi    】      修复`ExcelPicUtil`中可能的空指针异常
+* 【core   】      修复`LunarFestival`中重复节日问题（issue#ICC8X3@Gitee）
+* 【core   】      修复`ThreadUtil`中中断异常处理丢失中断信息的问题，解决ConcurrencyTester资源未释放的问题（pr#1358@Gitee）
+* 【core   】      修复`TEL_400_800`正则规则太窄问题（issue#3967@Github）
+* 【core   】      修复`ClassUti`isNormalClass判断未排除String问题（issue#3965@Github）
+* 【core   】      修复`ZipUtil`中zlib和unZlib调用后资源未释放问题（issue#3976@Github）
+* 【core   】      修复`Money`类的setAmount方法没有获取当前币种的小数位数而是使用的默认小数位和在遇到非2小数位的币种(如日元使用 0 位)会导致金额设置错误问题（pr#3970@Github）
+* 【cache  】      修复`AbstractCache`putWithoutLock方法可能导致的外部资源泄露问题（pr#3958@Github）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.8.38(2025-05-13)
+
+### 🐣新特性
+* 【core   】      `PathUtil#del`增加null检查（pr#1331@Gitee）
+* 【db     】      增加SAP HANA识别及方言（pr#3914@Github）
+* 【crypto 】      增加`Argon2`类，实现Argon2算法（issue#3890@Github）
+* 【core   】      `CharSequenceUtil`增加toLoweCase和toUpperCase方法（issue#IC0H2B@Gitee）
+* 【core   】      增加分段锁实现`SegmentLock`（pr#1330@Gitee）
+* 【core   】      重载subtractToList方法，提供isLinked选项（pr#3923@Github）
+* 【extra  】      `TemplateConfig`增加`setUseCache`方法（issue#IC3JRY@Gitee）
+* 【extra  】      `AbstractFtp`增加`rename`方法（issue#IC3PMI@Gitee）
+* 【core   】      优化`PropDesc`缓存注解判断，提升性能（pr#1335@Gitee）
+* 【core   】      添加`RecordUtil`支持record类（issue#3931@Github）
+* 【core   】      `Dict`的customKey方法访问权限修改为protected（pr#1340@Gitee）
+* 【ai     】      增加hutool-ai模块，对AI大模型的封装实现（pr#3937@Github）
+
+### 🐞Bug修复
+* 【setting】      修复`Setting`autoLoad可能的加载为空的问题（issue#3919@Github）
+* 【db     】      修复某些数据库的getParameterMetaData会返回NULL，导致空指针的问题。（pr#3936@Github）
+* 【extra  】      修正`SshjSftp`在SftpSubsystem服务时报错问题（pr#1338@Gitee）
+
+-------------------------------------------------------------------------------------------------------------
+# 5.8.37(2025-03-31)
 
 ### 🐣新特性
 * 【json   】      ObjectMapper删除重复trim（pr#3859@Github）
 * 【core   】      `FileWriter`增加方法，可选是否追加换行符（issue#3858@Github）
 * 【core   】      `IdcardUtil`验证10位身份证兼容中英文括号（issue#IBP6T1@Gitee）
 * 【extra  】      `PinyinUtil`增加重载可选是否返回声调（pr#3875@Github）
-* 【http   】      `HttpBase`增加重载可选是否返回声调（pr#3883@Github）
+* 【extra   】      `PinyinEngine`增加重载可选是否返回声调（pr#3883@Github）
 * 【core   】      增加`VersionUtil`版本比较工具（pr#3876@Github）
 * 【db     】      增加GoldenDB识别（pr#3886@Github）
 * 【http   】      改进`UrlQuery`对无参URL增加判断识别（issue#IBRVE4@Gitee）
+* 【core   】      改进`PropDesc`中去除Transient引用避免NoClassDefFoundError（issue#3901@Github）
+* 【core   】      `StrUtil.isBlank`增加`\u200c`判断（issue#3903@Github）
+* 【core   】      优化`CombinationAnnotationElement`注解数组性能（pr#1323@Gitee）
+* 【core   】      完善季度相关 API（pr#1324@Gitee）
 
 ### 🐞Bug修复
 * 【setting】      修复`SettingLoader`load未抛出异常导致配置文件无法正常遍历的问题（pr#3868@Github）
 * 【cache  】      修复`ReentrantCache#getOrRemoveExpired`方法丢失onRemove触发问题（pr#1315@Gitee）
 * 【json   】      修复`JsonUtil.toBean`泛型数组类型丢失问题（pr#3876@Github）
 * 【http   】      修复`HttpUtil.normalizeParams`规则问题（issue#IBQIYQ@Gitee）
+* 【http   】      修复`NumberChineseFormatter.format`中自定义单位在0时错误问题（issue#3888@Github）
 
 -------------------------------------------------------------------------------------------------------------
 # 5.8.36(2025-02-18)

@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>cn.hutool</groupId>
 		<artifactId>hutool-parent</artifactId>
-		<version>5.8.37-SNAPSHOT</version>
+		<version>5.8.40-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hutool-all</artifactId>
@@ -111,6 +111,11 @@
 		<dependency>
 			<groupId>cn.hutool</groupId>
 			<artifactId>hutool-jwt</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-ai</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 	</dependencies>

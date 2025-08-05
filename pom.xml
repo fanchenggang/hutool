@@ -8,7 +8,7 @@
 
 	<groupId>cn.hutool</groupId>
 	<artifactId>hutool-parent</artifactId>
-	<version>5.8.37-SNAPSHOT</version>
+	<version>5.8.40-SNAPSHOT</version>
 	<name>hutool</name>
 	<description>Hutool是一个小而全的Java工具类库，通过静态方法封装，降低相关API的学习成本，提高工作效率，使Java拥有函数式语言般的优雅，让Java语言也可以“甜甜的”。</description>
 	<url>https://github.com/chinabugotech/hutool</url>
@@ -35,6 +35,7 @@
 		<module>hutool-captcha</module>
 		<module>hutool-socket</module>
 		<module>hutool-jwt</module>
+		<module>hutool-ai</module>
 	</modules>
 
 	<properties>
@@ -54,6 +55,12 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -105,6 +112,12 @@
 					<target>${compile.version}</target>
 					<compilerArgument>-Xlint:unchecked</compilerArgument>
 				</configuration>
+			</plugin>
+			<!-- 单元测试 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.3</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -213,14 +226,14 @@
 					<plugin>
 						<groupId>org.sonatype.central</groupId>
 						<artifactId>central-publishing-maven-plugin</artifactId>
-						<version>0.6.0</version>
+						<version>0.8.0</version>
 						<extensions>true</extensions>
 						<configuration>
 							<publishingServerId>central</publishingServerId>
 							<!-- 自动发布 -->
-							<autoPublish>true</autoPublish>
+							<autoPublish>false</autoPublish>
 							<!-- 等待发布 -->
-							<waitUntil>published</waitUntil>
+							<!--<waitUntil>published</waitUntil>-->
 						</configuration>
 					</plugin>
 				</plugins>

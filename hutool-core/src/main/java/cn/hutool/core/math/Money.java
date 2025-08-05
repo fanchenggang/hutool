@@ -294,7 +294,7 @@ public class Money implements Serializable, Comparable<Money> {
 	 */
 	public void setAmount(BigDecimal amount) {
 		if (amount != null) {
-			cent = rounding(amount.movePointRight(2), DEFAULT_ROUNDING_MODE);
+			cent = rounding(amount.movePointRight(currency.getDefaultFractionDigits()), DEFAULT_ROUNDING_MODE);
 		}
 	}
 
@@ -726,7 +726,7 @@ public class Money implements Serializable, Comparable<Money> {
 		Money lowResult = newMoneyWithSameCurrency(cent / targets);
 		Money highResult = newMoneyWithSameCurrency(lowResult.cent + 1);
 
-		int remainder = (int) cent % targets;
+		int remainder = (int) (cent % targets);
 
 		for (int i = 0; i < remainder; i++) {
 			results[i] = highResult;

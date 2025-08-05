@@ -1544,4 +1544,47 @@ public class MapUtil {
 		}
 		return list;
 	}
+
+	/**
+	 * 将多层级Map处理为一个层级Map类型
+	 *
+	 * @param map 入参Map
+	 * @param <K> 键类型
+	 * @param <V> 值类型
+	 * @return 单层级Map返回值
+	 * @since 5.8.40
+	 */
+	public static <K, V> Map<K, V> flatten(final Map<K, V> map) {
+		return flatten(map, new HashMap<>());
+	}
+
+	/**
+	 * 递归调用将多层级Map处理为一个层级Map类型
+	 *
+	 * @param map     入参Map
+	 * @param flatMap 单层级Map返回值
+	 * @param <K>     键类型
+	 * @param <V>     值类型
+	 * @return 单层级Map返回值
+	 * @since 5.8.40
+	 */
+	@SuppressWarnings("unchecked")
+	public static <K, V> Map<K, V> flatten(final Map<K, V> map, Map<K, V> flatMap) {
+		Assert.notNull(map);
+		if (null == flatMap) {
+			flatMap = new HashMap<>();
+		}
+
+		Map<K, V> finalFlatMap = flatMap;
+		map.forEach((k, v) -> {
+			// 避免嵌套循环
+			if (v instanceof Map && v != map) {
+				flatten((Map<K, V>) v, finalFlatMap);
+			} else {
+				finalFlatMap.put(k, v);
+			}
+		});
+
+		return flatMap;
+	}
 }
